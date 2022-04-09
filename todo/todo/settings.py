@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'rest_framework',
     'products',
-    'cart'
+    'cart',  # required for serving swagger ui's css/js files
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,9 @@ STATIC_URL = '/static/'
 CSRF_COOKIE_SECURE = True
 
 
-REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
+REST_FRAMEWORK = {
+  'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
+}
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
