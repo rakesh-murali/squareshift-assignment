@@ -17,9 +17,15 @@ from cart.constants import SHIPPING_COST, DISTANCE, WEIGHT
 
 class CartList(APIView):
 
+  def get_product(self, id):
+    try:
+      product = Product.objects.get(id=id)
+      return product
+    except:
+      raise Http404
+
   def post (self, request):
-    product = self.get_product(request.data.get('product_id'))
-    serializer = CartCreateSerializer(product, data=request.data)
+    serializer = CartCreateSerializer(data=request.data)
     if (serializer.is_valid()):
       serializer.save()
       return Response({ "cart": "Added Successfully" }, status=status.HTTP_201_CREATED)
@@ -48,6 +54,11 @@ class CartDetail(APIView):
       return Response({ "cart": "Added Successfully" }, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+  def get(self, request, pk):
+    cart = self.get_cart(pk)
+    cart_data = CartSerializer(cart)
+    return Response(cart_data.data, status=status.HTTP_200_OK)
+
   def delete (self, request, pk):
     try:
       cart = Cart.objects.get(id=pk)
@@ -55,9 +66,6 @@ class CartDetail(APIView):
       return status.HTTP_404_NOT_FOUND
     cart.delete()
     return HttpResponse(status=status.HTTP_200_OK)
-
-  def get (self, request, pk):
-    pass
 
 class CartShipping(APIView):
 
